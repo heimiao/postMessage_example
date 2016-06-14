@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<script type="text/javascript">
+		var EventUtil = {
+			//省略的代码
+			getClipboardText: function(event) {
+				var clipboardData = (event.clipboardData || window.clipboardData);
+				return clipboardData.getData("text");
+			},
+			//省略的代码
+			setClipboardText: function(event, value) {
+				if (event.clipboardData) {
+					return event.clipboardData.setData("text/plain", value);
+				} else if (window.clipboardData) {
+					return window.clipboardData.setData("text", value);
+				}
+			},
+			addHandler: function(element, type, handler) { 
+					if (element.addEventListener) {
+						element.addEventListener(type, handler, false);
+					} else if (element.attachEvent) {
+						element.attachEvent("on" + type, handler);
+					} else {
+						element["on" + type] = handler;
+					}
+				}
+				//省略的代码
+		}; 
+		EventUtil.addHandler(window, "message", function(event) {  
+			 if (event.origin = "http://127.0.0.1:8020/Event_example/postMessage.html") {
+				var writeData = event.data;
+				
+				event.source.postMessage(event.data,"http://127.0.0.1:8020/Event_example/postMessage.html");
+				console.log(writeData);
+			} 
+		})
+	</script>
+
+	<body>
+		我是新的页面，我要接受上个页面传给我的数据过来你懂吗？
+	</body>
+
+</html>

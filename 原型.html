@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html> 
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+		</style>
+		<script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		   function Person(){};
+		  
+			var person1=new Person(); 
+		   Person.prototype={
+		   	name:"weichao",
+		   	age:"28",
+		   	address:"hebei",
+		   	say:function(){
+		   			alert("my name is "+this.name+"家乡是"+this.address);
+		   	}
+		   }
+		   
+		  /* Person.prototype.name="weichao";
+		   Person.prototype.age="28";
+		   Person.prototype.address="河北"
+		   Person.prototype.say=function(){
+		   	alert("my name is "+this.name+"家乡是"+this.address);
+		   }*/  
+		   
+		    var p2=new Person(); 
+			//判断对象是否和Person构造有关系
+			 //alert(Person.prototype.isPrototypeOf(p2));ECMA262
+			  //alert(Object.getPrototypeOf(p2)==Person.prototype);
+//			  alert(p2.constructor==Person); 
+			   alert(p2.name); 
+		</script>
+	</head>
+
+</html>

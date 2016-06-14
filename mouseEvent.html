@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<style type="text/css">
+		.test {
+			width: 300px;
+			height: 300px;
+			border: 1px solid red;
+			margin: 100px auto;
+		}
+		.test div {
+			width: 200px;
+			height: 200px;
+			border: 1px solid red;
+			margin: 10px auto;
+		}
+	</style>
+	<script type="text/javascript">
+		var EventUtil = {
+			//处理绑定事件的兼容
+			addHandler: function(element, type, handler) {
+				if (element.addEventListener) {
+					element.addEventListener(type, handler, false);
+				} else if (element.attachEvent) {
+					element.attachEvent("on" + type, handler);
+				} else {
+					element["on" + type] = handler;
+				}
+			},
+			//处理事件解绑的兼容
+			removeHandler: function(element, type, handler) {
+				if (element.removeEventListener) {
+					element.removeEventListener(type, handler, false);
+				} else if (element.detachEvent) {
+					element.detachEvent("on" + type, handler);
+				} else {
+					element["on" + type] = null;
+				}
+			},
+			//获取对象的兼容方法
+			getEvent: function(event) {
+				return event ? event : window.event;
+			},
+			//它返回事件的目标
+			getTarget: function(event) {
+				return event.target || event.srcElement;
+			},
+			//取消事件的默认行为
+			preventDefault: function(event) {
+				if (event.preventDefault) {
+					event.preventDefault();
+				} else {
+					event.returnValue = false;
+				}
+			},
+			//阻止事件冒泡
+			stopPropagation: function(event) {
+				if (event.stopPropagation) {
+					event.stopPropagation();
+				} else {
+					event.cancelBubble = true;
+				}
+			},
+			//获得相关元素只发生在mouseOver或者mouserOut其他事件都是返回null
+			getRelatedTarget: function(event) {
+				if (event.relatedTarget) {
+					return event.relatedTarget;
+				} else if (event.toElement) {
+					return event.toElement;
+				} else if (event.fromElement) {
+					return event.fromElement;
+				} else {
+					return null;
+				}
+			},
+			//鼠标事件
+			getButton: function(event) {
+				if (document.implementation.hasFeature("MouseEvents", "2.0")) {
+					return event.button;
+				} else {
+					switch (event.button) {
+						case 0:
+						case 1:
+						case 3:
+						case 5:
+						case 7:
+							return 0;
+						case 2:
+						case 6:
+							return 2;
+						case 4:
+							return 1;
+					}
+				}
+			},
+			//获得鼠标滚轮事件
+			getWheelDelta: function(event) {
+				if (event.wheelDelta) {
+					return (client.engine.opera && client.engine.opera < 9.5 ?
+						-event.wheelDelta : event.wheelDelta);
+				} else {
+					return -event.detail * 40;
+				}
+			},
+			//获取键盘编码ASCII
+			getCharCode: function(event) {
+				if (typeof event.charCode == "number") {
+					return event.charCode;
+				} else {
+					return event.keyCode;
+				}
+			}
+		};
+		EventUtil.addHandler(window, "load", function(event) {
+			
+			var testObj = document.querySelector(".test");
+			var testinput = document.querySelector("#test-input");
+			// testObj.onclick=test;
+			// testObj.ondblclick=test;
+			// testObj.onmousedown=test;
+			// testObj.onmouseenter=test;
+			// testObj.onmouseleave=test;
+			// testObj.onmousemove=test;
+			// testObj.onmouseout=test;
+			// testObj.onmouseover=test;
+			// testObj.onmouseup=test; 
+			//testinput.onkeydown=test;
+			 testinput.onkeypress=test;
+			 
+			//testinput.onkeyup=test;    
+			var div = document.getElementById("myDiv"); 
+			EventUtil.addHandler(div, "contextmenu", function(event) {
+				event = EventUtil.getEvent(event);
+				EventUtil.preventDefault(event);
+				var menu = document.getElementById("myMenu");
+				menu.style.left = event.clientX + "px";
+				menu.style.top = event.clientY + "px";
+				menu.style.visibility = "visible";
+			});
+			
+			EventUtil.addHandler(document, "click", function(event) {
+				document.getElementById("myMenu").style.visibility = "hidden";
+			});
+			   
+			 document.forms[0].elements['txt'].onfocus=function(){
+			    this.select();
+		    } 
+		    
+		    EventUtil.addHandler(document.forms[0].elements['txt'],"keypress",function(event){
+		    	var _e=EventUtil.getEvent(event);
+		    	var _targetElemnt=EventUtil.getTarget(_e); 
+		    	var _charcode=EventUtil.getCharCode(_e);  
+		    	if(!/\d/.test(String.fromCharCode(_charcode)) && _charcode > 9 && !_e.ctrlKey){ 
+		    		EventUtil.preventDefault(_e);
+		    	}
+		    }) 
+		});
+		 
+		function test(e) {
+			//查看鼠标滚动的信息
+			//console.log(e.wheelDelta);
+			//统计点击的次数
+			//console.log(e.detail);
+			alert();
+			 console.log("shift按键"+e.shiftKey+"+ctrl按键"+e.ctrlKey+"+alt按键"+e.altKey+"+window按键"+e.metaKey);
+			//console.log(e.keyCode);
+		} 
+	</script> 
+	<body>
+		<div class="test">
+			<div id="test-input" > 
+				  <input type="" name=""value="" />
+			</div>
+		</div> 
+		<div id="myDiv">Click anywhere else to get the default context menu.</div> 
+		<ul id="myMenu" style="position:absolute;visibility:hidden;background-color:skyblue">
+			<li><a href="http://www.nczonline.net">Nicholas’ site</a></li>
+			<li><a href="http://www.wrox.com">Wrox site</a></li>
+			<li><a href="http://www.yahoo.com">Yahoo!</a></li>
+		</ul>
+		
+		<div class="">
+			<form name="fm" action="" method="post">
+				 <input type="text" size='5' name="txt" id="txt" value="12345" />
+				<input type="submit" value=""/>
+			</form> 
+		</div> 
+		
+	</body>
+
+</html>
